@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\title{CS305: Homework 1}
+\author{Alex Petralia}
+\date{January 2019}
+
+\begin{document}
+
+\maketitle
+
+\section{Question 1}
+\\
+$$\sum_{j=1}^{n} t_j = \frac{n^2 - 2n +1}{1 + log(n-1)}$$
+\\If $n = 2000$ then the sum is approximately $929126.932813$.
+\\
+\\
+\\
+\section{Question 2}
+\\
+\\Part a: output gets larger as more pairs are found that are double in value of each other.
+\\
+\\Part b: No pairs are found in the array.
+\\
+\\Part c: $T(n): c_1 + log(n)(c_2 + c_3 + c_4 + c_5) + \sqrt{n}(c_6) + c_7$ 
+\\
+\\Part d: $T(n): c_1 + log(n)(c_2 + c_3 + c_4 + c_5) + c_7$
+\\
+\\Part e: $T(n): c_1 + log(n)(c_2 + c_3 + c_4 + c_5 + c_6) + c_7$
+\\
+\\Part f: $O(nlog(n))$ if $c_6$ is hit at every iteration.
+\\
+\\Part g: $O(log(n))$ if $c_6$ is hit less than $c_2$ to $c_5$.
+
+
+
+
+
+
+
+\end{document}

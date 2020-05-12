@@ -1,0 +1,245 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsmath,amssymb,amsthm}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+
+\title{Homework 3 - CSCI 305}
+\author{Alex Petralia}
+\date{February 2019}
+
+\begin{document}
+
+
+
+\maketitle
+\section{Question 1: part a}
+\\
+\\
+\begin{lstlisting}
+M-ARY-Parent(int i, int m){
+    return -> floor[\frac{(i - 2)}{m} + 1]
+}
+
+M-ARY-Child(int i, int m, int j){
+    return -> m(i - 1) + j + 1
+}
+\end{lstlisting}
+
+
+
+
+%---------------------------------------------------------------------------
+\section{Question 1: part b}
+
+Let $h$ be the height of the $m$-array heap.
+\\Suppose the tree for the m-array heap is complete.
+\\Complete meaning that all levels besides possibly the last level
+\\are filled and all the nodes are as far left as they can be.
+\\
+\\Then by this logic we know: $1 + m + m^2 + . . . + m^h = n$.
+\\
+\\Thus $\frac{m^{h+1} - 1}{d - 1} = n$.
+\\
+\\Consequently $h = log_{m}(mn - 1 + 1) - 1 = log_{m}(mn) - 1$.
+\\
+\\We can further simply this as so:
+\begin{align}
+    \nonumber h = log_{m}(mn - 1 + 1) - 1 &= log_{m}(mn) - 1\\
+    \nonumber &= log_{m}(n) + log_{m}(m) - 1\\
+    \nonumber &= log_{m}(n) + 1 - 1\\
+    \nonumber &= log_{m}(n)
+\end{align}
+\\Therefore the solution is $h = log_{m}(n)$ which can be equated to 
+\\$\theta(log_{m}(n))$ to deal with the case when the heap isn't balanced.
+ 
+%---------------------------------------------------------------------------
+
+
+
+
+%---------------------------------------------------------------------------
+\section{Question 1: part c}
+\begin{lstlisting}
+Extract-max(int[] A, int n, int m) { 
+    int max = A[0];                                     
+    A[0] = A[n - 1]; //copy last key to the root        
+    n = n - 1; //decrease heap size                     
+    Max-M-Heapify(A, n, 0, m);                          
+    return max;                                         
+}
+
+//Max-M-Heapify is a modified version of maxHeapify using 
+//functions we created in part a with an added parameter being m.
+
+Max-M-Heapify(int[] A, int n, int index, int m){
+    int[] childArray;                                                       
+    childArray.length  = m + 1;                                             
+    while(True){                                                            
+        for(int i = 1; i < = m; i++){                                       
+            //if the child is a leaf                                        
+            if(childArray[i] == m * index + i && childArray[i] < len){      
+                childArray[i] = -1 // -1 indicates the child is a leaf      
+            }                                                               
+        }                                                                   
+        int maxChild = -1;                                                  
+        int maxChildIndex;                                                  
+        for(int j = 1; j <= m; j++){                                        
+            if (M-ARY-Child(i, m) != -1 && A[M-ARY-Child(i, m)] > maxChild){
+                maxChildIndex = M-ARY-Child(i, m);                           
+                maxChild = A[M-ARY-Child(i, m);                             
+            } 
+        }
+        if (maxChild == -1){                                                
+            break;                                                          
+        }
+        if (A[index] < A[maxChildIndex]){                                   
+            swap(A[index], A[maxChildIndex]);                               
+            index = maxChildIndex;                                          
+        }
+    }
+}
+\end{lstlisting}
+%Extract-max Analysis
+%--------------------
+We know the normal maxHeapify() run-time to be $\theta(log(n))$ which is 
+\\derived from $T(n) = T(2n/3) + O(1)$ as we know the algorithm
+\\recursively takes 2/3 of the array at each recursive step.
+\\For Max-M-Heapify() the function recursively calls itself for m children
+\\and knowing maxHeapify() in the worst case is $\theta(log(n))$ we can deduce that 
+\\Max-M-Heapify() run-time is $mlog_{m}(n)$ where we factor in the
+\\number of recursive calls being m.
+\\
+\\Also since Extract-max() just calls Max-M-Heapify() once we can 
+\\conclude that it's run-time is $mlog_{m}(n)$.
+\\
+\section{Question 1: part d}
+\begin{lstlisting}
+Insert(int[] A, int key){                               
+    A.length = A.length + 1;                            
+    A[A.length] = (large negative number, eg -\infty)   
+    A[A.length] = re_Heapify(A, A.length, key);         
+}
+
+//re-Heapify() fixes the heap after inserting a key
+//into the heap.
+
+reHeapify(int[] A, int i, int key){
+    if(key < A[i]){
+        break; //error: new key was smaller than current key
+    }
+    A[i] = key;
+    while(i >1 && A[i] > A[M-ARY-Parent(i, m)]){
+        swap(A[i], A[M-ARY-Parent(i, m)]);
+        i = M-ARY-Parent(i, m);
+    }
+}
+\end{lstlisting}
+%Analysis of Insert():
+%-----------------------
+For reHeapify() we know for a m-array heap the max height will be
+\\$log_{m}(n)$. Thus reHeapify() will run for a maximum of $log_{m}(n)$
+\\times since at every iteration the node is moved a level up.
+\\Therefore the time complexity for worst case is $\theta(log_{m}(n))$.
+
+\section{Question 2}
+\begin{lstlisting}
+We are assuming the heap to be a min-heap.
+keyFinder(int k, int index, int[] H, int m){
+    if(index >= m){ //checks if the index exists
+        return;
+    }
+    if(H[index] > k){
+        \\skips the node and its descendents
+        return; 
+    }
+    print(H[index]);
+    keyFinder(k, left(index), H, m);
+    keyFinder(k, right(index), H, m);
+    //left() and right() will grab the index of the
+    //left or right child of the node
+}
+\end{lstlisting}
+By definition of a min-heap all of the descendants will also have values
+\\greater than or equal to k if this is already the case with the current
+\\node(identified with the given index). Thus the algorithm doesn't have 
+\\to explore any further making the run time $O(k)$ since we skip all the
+\\nodes that don't satisfy the condition for k.
+
+
+~\\
+\section{Question 3: part a}
+1) \underline{The Algorithm} :
+\begin{lstlisting}
+findMe(int[] A, int l, int r, int z){
+    int j;                              
+    int m = floor[(l + r)/2];           
+    if(A[m] == z){                      
+        return m;                       
+    }else if(m == l){                   
+        return r;                       
+    }else if(m == r){                   
+        return l;                       
+    }else if(A[m] > z){                 
+        r = m;                          
+        j = findMe(A, l, r, z);     
+    }else if(A[m] < z){                 
+        l = m;                          
+        j = findMe(A, l, r, z);         
+    }
+    return j;                           
+}
+
+
+
+\end{lstlisting}
+2) \underline{The Recurrence Relation (Worst Case)}:
+\\
+\\Comparisons of elements in the array are invoked on lines c3, c9 and c12.
+\\In the worst case, the array gets divided in half recursively until an array of size 2 is what's left before
+returning the final j value (the resulting index). We also know there will be $log(n)$ comparisons which is dependent on $T(n/2)$ recursive calls to find what $T(n)$ is.
+\\Therefore we can solve the recurrence relation for the worst case as so:
+\\
+\begin{align}
+    \nonumber T(n) &= T(\frac{n}{2}) + lg(n)\\
+    \nonumber &= T(\frac{n}{4}) + lg(\frac{n}{2}) + lg(n)\\
+    \nonumber &= T(\frac{n}{8}) + lg(\frac{n}{4}) + lg(\frac{n}{2}) +lg(n)\\
+    \nonumber &= .  .  .
+\end{align}
+\\
+After $log(n)$ entries we get: $log(n) + log(\frac{n}{2}) + ... + log(n/2^{log(n)})$.
+\\
+\\We can rewrite this as: 
+\\$log(n) + (log(n) - 1) + (log(n) - 2) + (log(n) - 2) + (log(n) - log(n)) $.
+\\
+\\
+\\Which is equivalent to this sum:
+\\$log(n) + ... + 3 + 2 + 1 + 1$.
+\\
+\\Therefore we can a closed form of this sum which is $\frac{(log(n))(log(n) + 1)}{2} = \theta(log^{2}n)$.
+\\\\\\\
+3)\underline{Proving the algorithm(by substitution)}
+\\
+\\
+\begin{proof}\\
+\\
+\\We first re-write the recurrence as: $T(2^{k}) &= T(2^{k - 1}) + k$.
+\\Then we will define a new recurrence as $S(k) = S(k - 1) + k $.
+\begin{align}
+    \nonumber S(k) &= S(k - 1) + k  \\
+    \nonumber &= S(k - 2) + S(k - 1) + k \\
+    \nonumber &= S(k - 3) + S(k - 2) + S(k - 1) k\\
+    \nonumber &= .  .  . \\
+    \nonumber &= S(0) + 1 + 2 + 3 +  ... + k\\
+    \nonumber &= S(0) + \theta(k^{2})
+\end{align}
+\\So if we assume $S(0) = 1$ then the recurrence will equate to $\theta(k^{2})$.
+\\We also know $S(k) = T(2^{k}) = T(n)$ thus we get:
+\\$T(n) - \theta(k^{2}) = \theta(log^{2}n)$.
+\end{proof}
+
+
+
+\end{document}
